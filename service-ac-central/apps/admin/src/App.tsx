@@ -5,10 +5,13 @@ import AccountSettingsPage from "./pages/AccountSettingsPage";
 import ContactMessagesPage from "./pages/ContactMessagesPage";
 import Dashboard from "./pages/Dashboard";
 import FaqPage from "./pages/FaqPage";
+import ForgotPassword from "./pages/ForgotPassword";
 import Login from "./pages/Login";
 import LocationsPage from "./pages/LocationsPage";
 import PackagesPage from "./pages/PackagesPage";
 import PortfolioPage from "./pages/PortfolioPage";
+import Register from "./pages/Register";
+import ResetPassword from "./pages/ResetPassword";
 import ServicesPage from "./pages/ServicesPage";
 import SettingsPage from "./pages/SettingsPage";
 import TeamPage from "./pages/TeamPage";
@@ -19,6 +22,9 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/lupa-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           element={
             <ProtectedRoute>

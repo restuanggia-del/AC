@@ -29,4 +29,14 @@ export const env = {
 
   uploadDir: process.env.UPLOAD_DIR ?? "uploads",
   maxUploadSizeMb: parseInt(process.env.MAX_UPLOAD_SIZE_MB ?? "5", 10),
+
+  adminRegistrationCode: process.env.ADMIN_REGISTRATION_CODE ?? "",
+
+  adminPanelUrl: process.env.ADMIN_PANEL_URL ?? "http://localhost:5174",
+
+  smtpHost: process.env.SMTP_HOST ?? "",
+  smtpPort: parseInt(process.env.SMTP_PORT ?? "587", 10),
+  smtpUser: process.env.SMTP_USER ?? "",
+  smtpPass: process.env.SMTP_PASS ?? "",
+  smtpFrom: process.env.SMTP_FROM ?? "Service AC Central <no-reply@serviceaccentral.com>",
 };

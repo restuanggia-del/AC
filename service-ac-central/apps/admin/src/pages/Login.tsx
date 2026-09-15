@@ -1,6 +1,7 @@
-import { Lock, Mail, Snowflake } from "lucide-react";
+import { Mail, Snowflake } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import PasswordInput from "../components/PasswordInput";
 import { inputClass } from "../components/inputClass";
 import { useAuth } from "../hooks/useAuth";
 
@@ -37,7 +38,9 @@ export default function Login() {
           <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-white">
             <Snowflake className="h-7 w-7" />
           </span>
-          <h1 className="mt-4 text-lg font-extrabold text-ink-900">Service AC Central</h1>
+          <h1 className="mt-4 text-lg font-extrabold text-ink-900">
+            Service AC Central
+          </h1>
           <p className="text-sm text-ink-400">Masuk ke Admin Panel</p>
         </div>
 
@@ -53,16 +56,24 @@ export default function Login() {
               className={`${inputClass} pl-10`}
             />
           </div>
-          <div className="relative">
-            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
-            <input
-              type="password"
-              required
-              placeholder="Password"
+
+          <div>
+            <PasswordInput
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`${inputClass} pl-10`}
+              onChange={setPassword}
+              placeholder="Password"
+              required
+              withLeadingIcon
+              autoComplete="current-password"
             />
+            <div className="mt-2 text-right">
+              <Link
+                to="/lupa-password"
+                className="text-xs font-semibold text-brand-600 hover:underline"
+              >
+                Lupa password?
+              </Link>
+            </div>
           </div>
 
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
@@ -75,6 +86,16 @@ export default function Login() {
             {submitting ? "Memproses..." : "Masuk"}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-ink-500">
+          Belum punya akun?{" "}
+          <Link
+            to="/register"
+            className="font-bold text-brand-600 hover:underline"
+          >
+            Daftar di sini
+          </Link>
+        </p>
       </div>
     </div>
   );

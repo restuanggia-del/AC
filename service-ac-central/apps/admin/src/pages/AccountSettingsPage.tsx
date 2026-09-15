@@ -2,6 +2,7 @@ import { Save } from "lucide-react";
 import { useState } from "react";
 import FormField from "../components/FormField";
 import { inputClass } from "../components/inputClass";
+import PasswordInput from "../components/PasswordInput";
 import PageHeader from "../components/PageHeader";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../hooks/useAuth";
@@ -97,29 +98,23 @@ export default function AccountSettingsPage() {
           </p>
           <div className="space-y-4">
             <FormField label="Password Saat Ini">
-              <input
-                type="password"
-                className={inputClass}
+              <PasswordInput
                 value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
+                onChange={setCurrentPassword}
                 autoComplete="current-password"
               />
             </FormField>
             <FormField label="Password Baru">
-              <input
-                type="password"
-                className={inputClass}
+              <PasswordInput
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
+                onChange={setNewPassword}
                 autoComplete="new-password"
               />
             </FormField>
             <FormField label="Konfirmasi Password Baru">
-              <input
-                type="password"
-                className={inputClass}
+              <PasswordInput
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={setConfirmPassword}
                 autoComplete="new-password"
               />
             </FormField>

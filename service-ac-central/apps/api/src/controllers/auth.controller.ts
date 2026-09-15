@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import crypto from "node:crypto";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
@@ -6,6 +7,7 @@ import { Admin } from "../models/Admin";
 import { asyncHandler } from "../utils/asyncHandler";
 import { sendError, sendSuccess } from "../utils/apiResponse";
 import { AppError } from "../utils/AppError";
+import { sendResetPasswordEmail } from "../utils/mailer";
 
 function generateTokens(payload: { id: string; email: string; role: string }) {
   const accessToken = jwt.sign(payload, env.jwtAccessSecret, {
@@ -92,6 +94,7 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
     admin.passwordHash = await bcrypt.hash(newPassword, 10);
   }
 
+  // Kalau email diganti, pastikan belum dipakai admin lain
   const normalizedEmail = email.toLowerCase();
   if (normalizedEmail !== admin.email) {
     const existing = await Admin.findOne({ email: normalizedEmail });
@@ -109,4 +112,80 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
     { id: admin.id, name: admin.name, email: admin.email, role: admin.role },
     "Profil berhasil diperbarui"
   );
+});
+
+export const register = asyncHandler(async (req: Request, res: Response) => {
+  const { name, email, password, registrationCode } = req.body;
+
+  if (!env.adminRegistrationCode || registrationCode !== env.adminRegistrationCode) {
+    return sendError(res, "Kode registrasi tidak valid.", 403);
+  }
+
+  const normalizedEmail = email.toLowerCase();
+  const existing = await Admin.findOne({ email: normalizedEmail });
+  if (existing) {
+    return sendError(res, "Email sudah terdaftar, silakan login.", 409);
+  }
+
+  const passwordHash = await bcrypt.hash(password, 10);
+  const admin = await Admin.create({ name, email: normalizedEmail, passwordHash, role: "editor" });
+
+  const payload = { id: admin.id, email: admin.email, role: admin.role };
+  const { accessToken, refreshToken } = generateTokens(payload);
+
+  return sendSuccess(
+    res,
+    {
+      accessToken,
+      refreshToken,
+      admin: { id: admin.id, name: admin.name, email: admin.email, role: admin.role },
+    },
+    "Registrasi berhasil",
+    201
+  );
+});
+
+export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  const normalizedEmail = email.toLowerCase();
+
+  const admin = await Admin.findOne({ email: normalizedEmail });
+
+  if (!admin) {
+    return sendSuccess(res, null, "Kalau email terdaftar, link reset password sudah dikirim.");
+  }
+
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+  admin.resetPasswordTokenHash = tokenHash;
+  admin.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 jam
+  await admin.save();
+
+  const resetLink = `${env.adminPanelUrl}/reset-password?token=${rawToken}`;
+
+  await sendResetPasswordEmail({ to: admin.email, name: admin.name, resetLink });
+
+  return sendSuccess(res, null, "Kalau email terdaftar, link reset password sudah dikirim.");
+});
+
+export const resetPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body;
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+  const admin = await Admin.findOne({
+    resetPasswordTokenHash: tokenHash,
+    resetPasswordExpires: { $gt: new Date() },
+  }).select("+resetPasswordTokenHash +resetPasswordExpires");
+
+  if (!admin) {
+    return sendError(res, "Link reset password tidak valid atau sudah kedaluwarsa.", 400);
+  }
+
+  admin.passwordHash = await bcrypt.hash(newPassword, 10);
+  admin.resetPasswordTokenHash = undefined;
+  admin.resetPasswordExpires = undefined;
+  await admin.save();
+
+  return sendSuccess(res, null, "Password berhasil direset. Silakan login dengan password baru.");
 });

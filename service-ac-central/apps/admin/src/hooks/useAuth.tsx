@@ -12,6 +12,12 @@ interface AuthContextValue {
   admin: AdminUser | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (payload: {
+    name: string;
+    email: string;
+    password: string;
+    registrationCode: string;
+  }) => Promise<void>;
   logout: () => void;
   updateProfile: (payload: {
     name: string;
@@ -19,6 +25,8 @@ interface AuthContextValue {
     currentPassword?: string;
     newPassword?: string;
   }) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, newPassword: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -58,6 +66,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAdmin(adminData);
   }
 
+  async function register(payload: {
+    name: string;
+    email: string;
+    password: string;
+    registrationCode: string;
+  }) {
+    const res = await apiClient.post<
+      ApiResponse<{
+        accessToken: string;
+        refreshToken: string;
+        admin: AdminUser;
+      }>
+    >("/auth/register", payload);
+
+    const { accessToken, refreshToken, admin: adminData } = res.data.data;
+    tokenStorage.setTokens(accessToken, refreshToken);
+    setAdmin(adminData);
+  }
+
   function logout() {
     tokenStorage.clear();
     setAdmin(null);
@@ -77,9 +104,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAdmin(res.data.data);
   }
 
+  async function forgotPassword(email: string) {
+    await apiClient.post("/auth/forgot-password", { email });
+  }
+
+  async function resetPassword(token: string, newPassword: string) {
+    await apiClient.post("/auth/reset-password", { token, newPassword });
+  }
+
   return (
     <AuthContext.Provider
-      value={{ admin, isLoading, login, logout, updateProfile }}
+      value={{
+        admin,
+        isLoading,
+        login,
+        register,
+        logout,
+        updateProfile,
+        forgotPassword,
+        resetPassword,
+      }}
     >
       {children}
     </AuthContext.Provider>
