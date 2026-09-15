@@ -24,7 +24,7 @@ export const env = {
   corsOrigin: (process.env.CORS_ORIGIN ?? "http://localhost:5173,http://localhost:5174").split(","),
 
   seedAdminName: process.env.SEED_ADMIN_NAME ?? "Super Admin",
-  seedAdminEmail: process.env.SEED_ADMIN_EMAIL ?? "admin@serviceaccentral.com",
+  seedAdminEmail: process.env.SEED_ADMIN_EMAIL ?? "solusiaccentral@gmail.com",
   seedAdminPassword: process.env.SEED_ADMIN_PASSWORD ?? "Admin12345!",
 
   uploadDir: process.env.UPLOAD_DIR ?? "uploads",

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import EmptyState from "../components/EmptyState";
 import Loader from "../components/Loader";
 import PackageCard from "../components/PackageCard";
+import Reveal from "../components/Reveal";
 import SectionHeading from "../components/SectionHeading";
 import { fetchPackages, fetchServices } from "../services/resources";
 import type { PricePackage, Service } from "../types";
@@ -24,14 +25,17 @@ export default function Pricing() {
 
   return (
     <div>
-      <section className="bg-ink-900 py-16 text-center">
-        <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
-          Daftar Harga
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl px-4 text-ink-300">
-          Harga transparan tanpa biaya tersembunyi. Klik pesan untuk konfirmasi
-          via WhatsApp.
-        </p>
+      <section className="relative overflow-hidden bg-ink-900 py-16 text-center">
+        <div className="bg-grid-white absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_10%,transparent_75%)]" />
+        <Reveal direction="up" className="relative">
+          <h1 className="text-3xl font-extrabold text-white sm:text-4xl">
+            Daftar Harga
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl px-4 text-ink-300">
+            Harga transparan tanpa biaya tersembunyi. Klik pesan untuk
+            konfirmasi via WhatsApp.
+          </p>
+        </Reveal>
       </section>
 
       {loading ? (
@@ -40,18 +44,22 @@ export default function Pricing() {
         <>
           {/* PAKET HARGA */}
           <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <SectionHeading
-              eyebrow="Paket Harga"
-              title="Paket Layanan Lengkap"
-              description="Sudah termasuk rincian pekerjaan yang akan dilakukan teknisi kami."
-            />
+            <Reveal direction="up">
+              <SectionHeading
+                eyebrow="Paket Harga"
+                title="Paket Layanan Lengkap"
+                description="Sudah termasuk rincian pekerjaan yang akan dilakukan teknisi kami."
+              />
+            </Reveal>
             <div className="mt-10">
               {packages.length === 0 ? (
                 <EmptyState message="Belum ada paket harga." />
               ) : (
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {packages.map((p) => (
-                    <PackageCard key={p._id} pkg={p} />
+                  {packages.map((p, i) => (
+                    <Reveal key={p._id} direction="up" delay={i * 100}>
+                      <PackageCard pkg={p} />
+                    </Reveal>
                   ))}
                 </div>
               )}
@@ -61,11 +69,17 @@ export default function Pricing() {
           {/* HARGA PER UNIT (TABEL) */}
           <section className="bg-ink-50 py-16">
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-              <SectionHeading
-                eyebrow="Harga Per Unit"
-                title="Daftar Harga Jasa Per Unit"
-              />
-              <div className="mt-10 overflow-hidden rounded-2xl border border-ink-100 bg-white">
+              <Reveal direction="up">
+                <SectionHeading
+                  eyebrow="Harga Per Unit"
+                  title="Daftar Harga Jasa Per Unit"
+                />
+              </Reveal>
+              <Reveal
+                direction="up"
+                delay={100}
+                className="mt-10 overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm"
+              >
                 <table className="w-full text-left text-sm">
                   <thead className="bg-ink-900 text-white">
                     <tr>
@@ -92,7 +106,10 @@ export default function Pricing() {
                         `Hallo ${settings.companyName}, saya ingin info harga "${s.name} (${s.pkSize})".`,
                       );
                       return (
-                        <tr key={s._id} className="hover:bg-ink-50">
+                        <tr
+                          key={s._id}
+                          className="transition-colors duration-200 hover:bg-brand-50/60"
+                        >
                           <td className="px-5 py-3 font-semibold text-ink-800">
                             {s.name}
                           </td>
@@ -105,7 +122,7 @@ export default function Pricing() {
                               href={waLink}
                               target="_blank"
                               rel="noreferrer"
-                              className="inline-block rounded-lg bg-wa px-3 py-1.5 text-xs font-bold text-white hover:bg-wa-dark"
+                              className="inline-block rounded-lg bg-wa px-3 py-1.5 text-xs font-bold text-white transition-transform duration-200 hover:scale-105 hover:bg-wa-dark"
                             >
                               Info
                             </a>
@@ -115,7 +132,7 @@ export default function Pricing() {
                     })}
                   </tbody>
                 </table>
-              </div>
+              </Reveal>
             </div>
           </section>
         </>

@@ -8,8 +8,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-ink-900 text-ink-200">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 text-center sm:px-6 lg:grid-cols-4 lg:px-8 lg:text-left">
+        <div className="flex flex-col items-center lg:items-start">
           <div className="flex items-center gap-2">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
               <Snowflake className="h-5 w-5" />
@@ -18,13 +18,13 @@ export default function Footer() {
               {settings.companyName}
             </p>
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-ink-400">
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-400">
             Jasa cuci, service, pasang AC, dan isi freon dengan teknisi ahli &
             profesional. Melayani panggilan ke rumah dan kantor Anda.
           </p>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center lg:items-start">
           <p className="text-sm font-bold uppercase tracking-wide text-white">
             Navigasi
           </p>
@@ -62,7 +62,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center lg:items-start">
           <p className="text-sm font-bold uppercase tracking-wide text-white">
             Layanan Kami
           </p>
@@ -74,7 +74,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="flex flex-col items-center lg:items-start">
           <p className="text-sm font-bold uppercase tracking-wide text-white">
             Hubungi Kami
           </p>
@@ -87,12 +87,12 @@ export default function Footer() {
               <Mail className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
               <span>{settings.email}</span>
             </li>
-            <li className="flex items-start gap-2">
+            <li className="flex items-start gap-2 text-left">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
               <span>{settings.address}</span>
             </li>
           </ul>
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex justify-center gap-3 lg:justify-start">
             {settings.socialLinks?.instagram && (
               <a
                 href={settings.socialLinks.instagram}

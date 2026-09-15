@@ -11,13 +11,13 @@ export default function ServiceCard({ service }: { service: Service }) {
   );
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-100 hover:shadow-xl hover:shadow-brand-600/10">
       <div className="flex h-40 items-center justify-center bg-brand-50">
         {service.imageUrl ? (
           <img
             src={service.imageUrl}
             alt={service.name}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <Wind className="h-14 w-14 text-brand-400" />
@@ -40,7 +40,7 @@ export default function ServiceCard({ service }: { service: Service }) {
           href={waLink}
           target="_blank"
           rel="noreferrer"
-          className="mt-4 inline-flex items-center justify-center rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-bold text-white transition group-hover:bg-brand-600"
+          className="mt-4 inline-flex items-center justify-center rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-bold text-white transition-all duration-300 group-hover:-translate-y-0.5 group-hover:bg-brand-600 group-hover:shadow-lg group-hover:shadow-brand-600/25"
         >
           Pesan Sekarang
         </a>

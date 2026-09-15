@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 import WhatsAppFloating from "../components/WhatsAppFloating";
 
 export default function MainLayout() {
@@ -12,6 +13,7 @@ export default function MainLayout() {
       </main>
       <Footer />
       <WhatsAppFloating />
+      <ScrollToTopButton />
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function PackageCard({ pkg }: { pkg: PricePackage }) {
   );
 
   return (
-    <div className="flex flex-col rounded-2xl border border-ink-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+    <div className="flex flex-col rounded-2xl border border-ink-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-100 hover:shadow-xl hover:shadow-brand-600/10">
       <p className="text-sm font-bold text-brand-600">{pkg.pkSize}</p>
       <h3 className="mt-1 text-lg font-extrabold text-ink-900">{pkg.name}</h3>
       <p className="mt-2 text-2xl font-extrabold text-ink-900">
@@ -42,7 +42,7 @@ export default function PackageCard({ pkg }: { pkg: PricePackage }) {
         href={waLink}
         target="_blank"
         rel="noreferrer"
-        className="mt-6 inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-brand-700"
+        className="mt-6 inline-flex items-center justify-center rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/30"
       >
         Pesan Sekarang
       </a>

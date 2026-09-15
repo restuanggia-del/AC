@@ -94,7 +94,6 @@ export const updateProfile = asyncHandler(async (req: Request, res: Response) =>
     admin.passwordHash = await bcrypt.hash(newPassword, 10);
   }
 
-  // Kalau email diganti, pastikan belum dipakai admin lain
   const normalizedEmail = email.toLowerCase();
   if (normalizedEmail !== admin.email) {
     const existing = await Admin.findOne({ email: normalizedEmail });
@@ -159,7 +158,7 @@ export const forgotPassword = asyncHandler(async (req: Request, res: Response) =
   const tokenHash = crypto.createHash("sha256").update(rawToken).digest("hex");
 
   admin.resetPasswordTokenHash = tokenHash;
-  admin.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 jam
+  admin.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
   await admin.save();
 
   const resetLink = `${env.adminPanelUrl}/reset-password?token=${rawToken}`;

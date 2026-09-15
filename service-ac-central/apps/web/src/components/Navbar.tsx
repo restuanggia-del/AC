@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, Snowflake, X } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { useSettings } from "../hooks/useSettings";
@@ -17,17 +17,33 @@ const navItems = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { settings } = useSettings();
   const waLink = buildWhatsAppLink(
     settings.whatsappNumber,
     `Hallo ${settings.companyName}, saya ingin konsultasi AC.`,
   );
 
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-ink-100 bg-white/90 backdrop-blur">
+    <header
+      className={`sticky top-0 z-50 border-b bg-white/85 backdrop-blur-md transition-all duration-300 ${
+        scrolled
+          ? "border-ink-100 shadow-sm shadow-ink-900/5"
+          : "border-transparent"
+      }`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white transition-transform duration-300 group-hover:scale-105">
             <Snowflake className="h-5 w-5" />
           </span>
           <div className="leading-tight">
@@ -64,7 +80,7 @@ export default function Navbar() {
             href={waLink}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-wa px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-wa/30 transition hover:bg-wa-dark"
+            className="inline-flex items-center gap-2 rounded-xl bg-wa px-4 py-2.5 text-sm font-bold text-white shadow-sm shadow-wa/30 transition-all duration-300 hover:-translate-y-0.5 hover:bg-wa-dark hover:shadow-md hover:shadow-wa/40"
           >
             Konsultasi Gratis
           </a>

@@ -2,7 +2,7 @@ import type { Portfolio } from "../types";
 
 export default function PortfolioCard({ item }: { item: Portfolio }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-ink-100 bg-ink-50">
+    <div className="group relative overflow-hidden rounded-2xl border border-ink-100 bg-ink-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink-900/10">
       <div className="aspect-[4/3] w-full overflow-hidden">
         <img
           src={item.imageUrl}

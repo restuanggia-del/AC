@@ -7,7 +7,7 @@ export default function TestimonialCard({
   testimonial: Testimonial;
 }) {
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-ink-100 bg-white p-6 shadow-sm">
+    <div className="flex h-full flex-col rounded-2xl border border-ink-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-ink-900/5">
       <RatingStars rating={testimonial.rating} />
       <p className="mt-4 flex-1 text-sm leading-relaxed text-ink-600">
         “{testimonial.message}”
