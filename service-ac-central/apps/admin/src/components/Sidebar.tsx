@@ -35,7 +35,7 @@ export default function Sidebar() {
         </span>
         <div className="leading-tight">
           <p className="text-sm font-extrabold text-ink-900">
-            Service AC Central
+            Solusi AC Central
           </p>
           <p className="text-xs text-ink-400">Admin Panel</p>
         </div>

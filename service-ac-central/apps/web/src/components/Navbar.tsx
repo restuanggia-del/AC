@@ -45,7 +45,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2">
           <div className="leading-tight">
             <p className="text-base font-extrabold text-ink-900">
-              Service AC Central
+              Solusi AC Central
             </p>
             <p className="text-xs font-medium text-ink-500">
               Teknisi Ahli & Profesional
