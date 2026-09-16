@@ -28,9 +28,9 @@ const menu = [
 
 export default function Sidebar() {
   return (
-    <aside className="hidden w-64 shrink-0 border-r border-ink-100 bg-white lg:flex lg:flex-col">
-      <div className="flex items-center gap-2 border-b border-ink-100 px-5 py-5">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
+    <aside className="clay-panel hidden w-64 shrink-0 flex-col lg:flex">
+      <div className="flex items-center gap-3 px-5 py-5">
+        <span className="clay-bubble h-11 w-11 bg-gradient-to-br from-brand-400 to-brand-600 text-white">
           <Snowflake className="h-5 w-5" />
         </span>
         <div className="leading-tight">
@@ -39,15 +39,17 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-2">
         {menu.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                isActive ? "bg-brand-50 text-brand-700" : "text-ink-500 hover:bg-ink-50 hover:text-ink-800"
+              `flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+                isActive
+                  ? "clay-sm bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700"
+                  : "text-ink-500 hover:bg-white/60 hover:text-ink-800"
               }`
             }
           >
@@ -57,8 +59,8 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-ink-100 p-4">
-        <p className="rounded-xl bg-ink-50 px-3 py-3 text-[11px] leading-relaxed text-ink-400">
+      <div className="p-4">
+        <p className="clay-inset px-3.5 py-3 text-[11px] leading-relaxed text-ink-500">
           Perubahan yang Anda simpan di sini akan langsung tampil di website publik.
         </p>
       </div>

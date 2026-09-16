@@ -39,7 +39,7 @@ export default function PasswordInput({
         type="button"
         onClick={() => setVisible((v) => !v)}
         tabIndex={-1}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-600"
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-400 transition-colors hover:text-brand-600"
         aria-label={visible ? "Sembunyikan password" : "Lihat password"}
       >
         {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}

@@ -25,13 +25,13 @@ export default function UserMenu() {
     <div className="relative" ref={containerRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-3 rounded-xl px-2 py-1.5 transition hover:bg-ink-50"
+        className="clay-sm flex items-center gap-3 rounded-2xl px-3 py-2 transition-all duration-200 hover:-translate-y-0.5"
       >
         <div className="text-right">
           <p className="text-sm font-bold text-ink-900">{admin?.name}</p>
           <p className="text-xs capitalize text-ink-400">{admin?.role}</p>
         </div>
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700">
+        <div className="clay-bubble h-9 w-9 rounded-full bg-gradient-to-br from-brand-300 to-brand-600 text-sm font-bold text-white">
           {admin?.name?.charAt(0) ?? "A"}
         </div>
         <ChevronDown
@@ -40,26 +40,28 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-ink-100 bg-white shadow-lg">
-          <div className="border-b border-ink-100 px-4 py-3">
+        <div className="clay absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden !rounded-2xl">
+          <div className="px-4 py-3">
             <p className="truncate text-sm font-bold text-ink-900">
               {admin?.name}
             </p>
             <p className="truncate text-xs text-ink-400">{admin?.email}</p>
           </div>
+          <div className="mx-3 h-px bg-ink-200/50" />
           <div className="p-1.5">
             <Link
               to="/akun"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold text-ink-600 hover:bg-ink-50"
+              className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-ink-600 hover:bg-white/70"
             >
               <UserCircle className="h-4 w-4" /> Pengaturan Akun
             </Link>
           </div>
-          <div className="border-t border-ink-100 p-1.5">
+          <div className="mx-3 h-px bg-ink-200/50" />
+          <div className="p-1.5">
             <button
               onClick={logout}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50"
+              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50"
             >
               <LogOut className="h-4 w-4" /> Keluar
             </button>

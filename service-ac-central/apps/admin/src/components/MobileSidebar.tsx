@@ -32,20 +32,20 @@ export default function MobileSidebar({ open, onClose }: { open: boolean; onClos
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      <div className="absolute inset-0 bg-ink-900/50" onClick={onClose} />
-      <aside className="relative flex h-full w-72 flex-col bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-ink-100 px-5 py-4">
+      <div className="absolute inset-0 bg-ink-900/40 backdrop-blur-sm" onClick={onClose} />
+      <aside className="clay relative m-3 flex h-[calc(100%-1.5rem)] w-72 flex-col !rounded-[28px]">
+        <div className="flex items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white">
+            <span className="clay-bubble h-10 w-10 bg-gradient-to-br from-brand-400 to-brand-600 text-white">
               <Snowflake className="h-4.5 w-4.5" />
             </span>
             <p className="text-sm font-extrabold text-ink-900">Admin Panel</p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100">
+          <button onClick={onClose} className="clay-icon-btn">
             <X className="h-5 w-5" />
           </button>
         </div>
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-2">
           {menu.map((item) => (
             <NavLink
               key={item.to}
@@ -53,8 +53,10 @@ export default function MobileSidebar({ open, onClose }: { open: boolean; onClos
               end={item.end}
               onClick={onClose}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold ${
-                  isActive ? "bg-brand-50 text-brand-700" : "text-ink-500"
+                `flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? "clay-sm bg-gradient-to-br from-brand-50 to-brand-100 text-brand-700"
+                    : "text-ink-500 hover:bg-white/60"
                 }`
               }
             >

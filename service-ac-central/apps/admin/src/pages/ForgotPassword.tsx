@@ -26,10 +26,10 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink-900 px-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl">
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="clay w-full max-w-sm p-8">
         <div className="flex flex-col items-center text-center">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-white">
+          <span className="clay-bubble h-14 w-14 bg-gradient-to-br from-brand-400 to-brand-600 text-white">
             <Snowflake className="h-7 w-7" />
           </span>
           <h1 className="mt-4 text-lg font-extrabold text-ink-900">
@@ -39,7 +39,7 @@ export default function ForgotPassword() {
         </div>
 
         {sent ? (
-          <div className="mt-8 rounded-xl bg-emerald-50 p-4 text-center text-sm font-medium text-emerald-700">
+          <div className="clay-sm mt-8 bg-gradient-to-br from-emerald-50 to-emerald-100/60 p-4 text-center text-sm font-medium text-emerald-700">
             Kalau email tersebut terdaftar, link reset password sudah dikirim.
             Silakan cek inbox (atau folder spam) email kamu.
           </div>
@@ -58,13 +58,15 @@ export default function ForgotPassword() {
             </div>
 
             {error && (
-              <p className="text-sm font-medium text-red-600">{error}</p>
+              <p className="clay-inset px-4 py-2.5 text-sm font-medium text-red-600">
+                {error}
+              </p>
             )}
 
             <button
               type="submit"
               disabled={submitting}
-              className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-brand-700 disabled:opacity-60"
+              className="clay-btn clay-btn-primary w-full py-3"
             >
               {submitting ? "Mengirim..." : "Kirim Link Reset Password"}
             </button>

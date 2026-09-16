@@ -1,5 +1,5 @@
 import { Pencil, Plus, Trash2, Upload } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Badge from "../components/Badge";
 import ConfirmDialog from "../components/ConfirmDialog";
 import FormField from "../components/FormField";
@@ -7,16 +7,23 @@ import { inputClass } from "../components/inputClass";
 import Modal from "../components/Modal";
 import PageHeader from "../components/PageHeader";
 import { useToast } from "../components/Toast";
+import { matchesQuery, useSearch } from "../hooks/useSearch";
 import { teamApi, uploadImage } from "../services/resources";
 import type { TeamMember } from "../types";
 
 const emptyForm: Partial<TeamMember> = {
-  name: "", position: "", photoUrl: "", description: "",
-  socialLinks: { instagram: "", facebook: "" }, isActive: true, order: 0,
+  name: "",
+  position: "",
+  photoUrl: "",
+  description: "",
+  socialLinks: { instagram: "", facebook: "" },
+  isActive: true,
+  order: 0,
 };
 
 export default function TeamPage() {
   const { showToast } = useToast();
+  const { normalizedQuery } = useSearch();
   const [items, setItems] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,12 +36,31 @@ export default function TeamPage() {
 
   function loadData() {
     setLoading(true);
-    teamApi.getAll().then(setItems).finally(() => setLoading(false));
+    teamApi
+      .getAll()
+      .then(setItems)
+      .finally(() => setLoading(false));
   }
   useEffect(loadData, []);
 
-  function openCreate() { setEditing(null); setForm(emptyForm); setModalOpen(true); }
-  function openEdit(item: TeamMember) { setEditing(item); setForm(item); setModalOpen(true); }
+  const filteredItems = useMemo(
+    () =>
+      items.filter((item) =>
+        matchesQuery([item.name, item.position], normalizedQuery),
+      ),
+    [items, normalizedQuery],
+  );
+
+  function openCreate() {
+    setEditing(null);
+    setForm(emptyForm);
+    setModalOpen(true);
+  }
+  function openEdit(item: TeamMember) {
+    setEditing(item);
+    setForm(item);
+    setModalOpen(true);
+  }
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -54,8 +80,13 @@ export default function TeamPage() {
     e.preventDefault();
     setSaving(true);
     try {
-      if (editing) { await teamApi.update(editing._id, form); showToast("Team berhasil diperbarui"); }
-      else { await teamApi.create(form); showToast("Team berhasil ditambahkan"); }
+      if (editing) {
+        await teamApi.update(editing._id, form);
+        showToast("Team berhasil diperbarui");
+      } else {
+        await teamApi.create(form);
+        showToast("Team berhasil ditambahkan");
+      }
       setModalOpen(false);
       loadData();
     } catch {
@@ -86,7 +117,7 @@ export default function TeamPage() {
         title="Team"
         description="Kelola profil teknisi & customer service."
         action={
-          <button onClick={openCreate} className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-700">
+          <button onClick={openCreate} className="clay-btn clay-btn-primary">
             <Plus className="h-4 w-4" /> Tambah Anggota
           </button>
         }
@@ -94,60 +125,146 @@ export default function TeamPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {loading && <p className="text-sm text-ink-400">Memuat data...</p>}
-        {!loading && items.length === 0 && <p className="text-sm text-ink-400">Belum ada data team.</p>}
-        {items.map((m) => (
-          <div key={m._id} className="rounded-2xl border border-ink-100 bg-white p-5 text-center shadow-sm">
+        {!loading && filteredItems.length === 0 && (
+          <p className="text-sm text-ink-400">
+            {items.length === 0
+              ? "Belum ada data team."
+              : "Tidak ada hasil yang cocok."}
+          </p>
+        )}
+        {filteredItems.map((m) => (
+          <div key={m._id} className="clay-card text-center">
             <div className="mx-auto h-20 w-20 overflow-hidden rounded-full bg-ink-100">
-              {m.photoUrl ? <img src={m.photoUrl} alt={m.name} className="h-full w-full object-cover" /> : null}
+              {m.photoUrl ? (
+                <img
+                  src={m.photoUrl}
+                  alt={m.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : null}
             </div>
             <p className="mt-3 font-bold text-ink-900">{m.name}</p>
             <p className="text-xs font-semibold text-brand-600">{m.position}</p>
-            <div className="mt-2 flex justify-center"><Badge active={m.isActive} /></div>
+            <div className="mt-2 flex justify-center">
+              <Badge active={m.isActive} />
+            </div>
             <div className="mt-3 flex justify-center gap-2">
-              <button onClick={() => openEdit(m)} className="rounded-lg p-1.5 text-ink-500 hover:bg-brand-50 hover:text-brand-700">
-                <Pencil className="h-4 w-4" />
+              <button
+                onClick={() => openEdit(m)}
+                className="clay-icon-btn clay-icon-btn-brand h-8 w-8"
+              >
+                <Pencil className="h-3.5 w-3.5" />
               </button>
-              <button onClick={() => setDeleteTarget(m)} className="rounded-lg p-1.5 text-ink-500 hover:bg-red-50 hover:text-red-600">
-                <Trash2 className="h-4 w-4" />
+              <button
+                onClick={() => setDeleteTarget(m)}
+                className="clay-icon-btn clay-icon-btn-danger h-8 w-8"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "Edit Anggota" : "Tambah Anggota"}>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editing ? "Edit Anggota" : "Tambah Anggota"}
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormField label="Nama">
-            <input required className={inputClass} value={form.name ?? ""} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input
+              required
+              className={inputClass}
+              value={form.name ?? ""}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </FormField>
           <FormField label="Jabatan">
-            <input required placeholder="Customer Service / Teknisi Senior" className={inputClass} value={form.position ?? ""} onChange={(e) => setForm({ ...form, position: e.target.value })} />
+            <input
+              required
+              placeholder="Customer Service / Teknisi Senior"
+              className={inputClass}
+              value={form.position ?? ""}
+              onChange={(e) => setForm({ ...form, position: e.target.value })}
+            />
           </FormField>
           <FormField label="Foto">
             <div className="flex items-center gap-3">
-              {form.photoUrl && <img src={form.photoUrl} alt="preview" className="h-14 w-14 rounded-full object-cover" />}
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-ink-300 px-4 py-2.5 text-sm font-semibold text-ink-500 hover:border-brand-400 hover:text-brand-600">
-                <Upload className="h-4 w-4" /> {uploading ? "Mengunggah..." : "Unggah Foto"}
-                <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+              {form.photoUrl && (
+                <img
+                  src={form.photoUrl}
+                  alt="preview"
+                  className="clay-sm h-14 w-14 rounded-full object-cover"
+                />
+              )}
+              <label className="clay-btn clay-btn-secondary cursor-pointer border-2 border-dashed border-ink-300/70">
+                <Upload className="h-4 w-4" />{" "}
+                {uploading ? "Mengunggah..." : "Unggah Foto"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpload}
+                />
               </label>
             </div>
           </FormField>
           <FormField label="Deskripsi Singkat">
-            <textarea rows={2} className={inputClass} value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <textarea
+              rows={2}
+              className={inputClass}
+              value={form.description ?? ""}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
           </FormField>
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Instagram (opsional)">
-              <input className={inputClass} value={form.socialLinks?.instagram ?? ""} onChange={(e) => setForm({ ...form, socialLinks: { ...form.socialLinks, instagram: e.target.value } })} />
+              <input
+                className={inputClass}
+                value={form.socialLinks?.instagram ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    socialLinks: {
+                      ...form.socialLinks,
+                      instagram: e.target.value,
+                    },
+                  })
+                }
+              />
             </FormField>
             <FormField label="Facebook (opsional)">
-              <input className={inputClass} value={form.socialLinks?.facebook ?? ""} onChange={(e) => setForm({ ...form, socialLinks: { ...form.socialLinks, facebook: e.target.value } })} />
+              <input
+                className={inputClass}
+                value={form.socialLinks?.facebook ?? ""}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    socialLinks: {
+                      ...form.socialLinks,
+                      facebook: e.target.value,
+                    },
+                  })
+                }
+              />
             </FormField>
           </div>
           <label className="flex items-center gap-2 text-sm font-semibold text-ink-600">
-            <input type="checkbox" checked={form.isActive ?? true} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />
+            <input
+              type="checkbox"
+              checked={form.isActive ?? true}
+              onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+            />
             Aktif
           </label>
-          <button type="submit" disabled={saving} className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={saving}
+            className="clay-btn clay-btn-primary w-full"
+          >
             {saving ? "Menyimpan..." : "Simpan"}
           </button>
         </form>

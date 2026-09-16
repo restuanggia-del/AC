@@ -1,5 +1,5 @@
 import { Pencil, Plus, Trash2, Upload } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Badge from "../components/Badge";
 import ConfirmDialog from "../components/ConfirmDialog";
 import FormField from "../components/FormField";
@@ -7,6 +7,7 @@ import { inputClass } from "../components/inputClass";
 import Modal from "../components/Modal";
 import PageHeader from "../components/PageHeader";
 import { useToast } from "../components/Toast";
+import { matchesQuery, useSearch } from "../hooks/useSearch";
 import { serviceApi, uploadImage } from "../services/resources";
 import type { Service } from "../types";
 
@@ -33,6 +34,7 @@ const emptyForm: Partial<Service> = {
 
 export default function ServicesPage() {
   const { showToast } = useToast();
+  const { normalizedQuery } = useSearch();
   const [items, setItems] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -53,6 +55,14 @@ export default function ServicesPage() {
   }
 
   useEffect(loadData, []);
+
+  const filteredItems = useMemo(
+    () =>
+      items.filter((item) =>
+        matchesQuery([item.name, item.category, item.pkSize], normalizedQuery),
+      ),
+    [items, normalizedQuery],
+  );
 
   function openCreate() {
     setEditing(null);
@@ -121,18 +131,15 @@ export default function ServicesPage() {
         title="Layanan"
         description="Kelola daftar layanan AC yang tampil di website publik."
         action={
-          <button
-            onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-700"
-          >
+          <button onClick={openCreate} className="clay-btn clay-btn-primary">
             <Plus className="h-4 w-4" /> Tambah Layanan
           </button>
         }
       />
 
-      <div className="overflow-x-auto rounded-2xl border border-ink-100 bg-white">
-        <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-ink-50 text-ink-500">
+      <div className="clay-card-flush overflow-x-auto">
+        <table className="clay-table w-full min-w-[720px] text-left text-sm">
+          <thead className="text-ink-500">
             <tr>
               <th className="px-4 py-3 font-bold">Nama Layanan</th>
               <th className="px-4 py-3 font-bold">Kategori</th>
@@ -142,28 +149,50 @@ export default function ServicesPage() {
               <th className="px-4 py-3 font-bold text-right">Aksi</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-ink-100">
+          <tbody>
             {loading && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-ink-400">Memuat data...</td></tr>
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-ink-400">
+                  Memuat data...
+                </td>
+              </tr>
             )}
-            {!loading && items.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-8 text-center text-ink-400">Belum ada data layanan.</td></tr>
+            {!loading && filteredItems.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-ink-400">
+                  {items.length === 0
+                    ? "Belum ada data layanan."
+                    : "Tidak ada hasil yang cocok."}
+                </td>
+              </tr>
             )}
-            {items.map((item) => (
-              <tr key={item._id} className="hover:bg-ink-50">
-                <td className="px-4 py-3 font-semibold text-ink-800">{item.name}</td>
-                <td className="px-4 py-3 capitalize text-ink-500">{item.category}</td>
+            {filteredItems.map((item) => (
+              <tr key={item._id}>
+                <td className="px-4 py-3 font-semibold text-ink-800">
+                  {item.name}
+                </td>
+                <td className="px-4 py-3 capitalize text-ink-500">
+                  {item.category}
+                </td>
                 <td className="px-4 py-3 text-ink-500">{item.pkSize}</td>
                 <td className="px-4 py-3 font-semibold text-ink-800">
                   Rp {item.price.toLocaleString("id-ID")}
                 </td>
-                <td className="px-4 py-3"><Badge active={item.isActive} /></td>
+                <td className="px-4 py-3">
+                  <Badge active={item.isActive} />
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex justify-end gap-2">
-                    <button onClick={() => openEdit(item)} className="rounded-lg p-2 text-ink-500 hover:bg-brand-50 hover:text-brand-700">
+                    <button
+                      onClick={() => openEdit(item)}
+                      className="clay-icon-btn clay-icon-btn-brand"
+                    >
                       <Pencil className="h-4 w-4" />
                     </button>
-                    <button onClick={() => setDeleteTarget(item)} className="rounded-lg p-2 text-ink-500 hover:bg-red-50 hover:text-red-600">
+                    <button
+                      onClick={() => setDeleteTarget(item)}
+                      className="clay-icon-btn clay-icon-btn-danger"
+                    >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
@@ -174,54 +203,125 @@ export default function ServicesPage() {
         </table>
       </div>
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={editing ? "Edit Layanan" : "Tambah Layanan"}>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={editing ? "Edit Layanan" : "Tambah Layanan"}
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormField label="Nama Layanan">
-            <input required className={inputClass} value={form.name ?? ""} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input
+              required
+              className={inputClass}
+              value={form.name ?? ""}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </FormField>
 
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Kategori">
-              <select className={inputClass} value={form.category ?? "cuci"} onChange={(e) => setForm({ ...form, category: e.target.value as Service["category"] })}>
+              <select
+                className={inputClass}
+                value={form.category ?? "cuci"}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    category: e.target.value as Service["category"],
+                  })
+                }
+              >
                 {categoryOptions.map((c) => (
-                  <option key={c.value} value={c.value}>{c.label}</option>
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
             </FormField>
             <FormField label="Ukuran PK">
-              <input required placeholder="0.5 - 1 PK" className={inputClass} value={form.pkSize ?? ""} onChange={(e) => setForm({ ...form, pkSize: e.target.value })} />
+              <input
+                required
+                placeholder="0.5 - 1 PK"
+                className={inputClass}
+                value={form.pkSize ?? ""}
+                onChange={(e) => setForm({ ...form, pkSize: e.target.value })}
+              />
             </FormField>
           </div>
 
           <FormField label="Harga (Rp)">
-            <input required type="number" min={0} className={inputClass} value={form.price ?? 0} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
+            <input
+              required
+              type="number"
+              min={0}
+              className={inputClass}
+              value={form.price ?? 0}
+              onChange={(e) =>
+                setForm({ ...form, price: Number(e.target.value) })
+              }
+            />
           </FormField>
 
           <FormField label="Deskripsi">
-            <textarea rows={3} className={inputClass} value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <textarea
+              rows={3}
+              className={inputClass}
+              value={form.description ?? ""}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
           </FormField>
 
           <FormField label="Gambar Layanan">
             <div className="flex items-center gap-3">
-              {form.imageUrl && <img src={form.imageUrl} alt="preview" className="h-14 w-14 rounded-lg object-cover" />}
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-ink-300 px-4 py-2.5 text-sm font-semibold text-ink-500 hover:border-brand-400 hover:text-brand-600">
-                <Upload className="h-4 w-4" /> {uploading ? "Mengunggah..." : "Unggah Gambar"}
-                <input type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+              {form.imageUrl && (
+                <img
+                  src={form.imageUrl}
+                  alt="preview"
+                  className="clay-sm h-14 w-14 object-cover"
+                />
+              )}
+              <label className="clay-btn clay-btn-secondary cursor-pointer border-2 border-dashed border-ink-300/70">
+                <Upload className="h-4 w-4" />{" "}
+                {uploading ? "Mengunggah..." : "Unggah Gambar"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleUpload}
+                />
               </label>
             </div>
           </FormField>
 
           <div className="flex items-center justify-between">
             <FormField label="Urutan Tampil">
-              <input type="number" className={inputClass} value={form.order ?? 0} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })} />
+              <input
+                type="number"
+                className={inputClass}
+                value={form.order ?? 0}
+                onChange={(e) =>
+                  setForm({ ...form, order: Number(e.target.value) })
+                }
+              />
             </FormField>
             <label className="flex items-center gap-2 pt-6 text-sm font-semibold text-ink-600">
-              <input type="checkbox" checked={form.isActive ?? true} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} />
+              <input
+                type="checkbox"
+                checked={form.isActive ?? true}
+                onChange={(e) =>
+                  setForm({ ...form, isActive: e.target.checked })
+                }
+              />
               Aktif
             </label>
           </div>
 
-          <button type="submit" disabled={saving} className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white hover:bg-brand-700 disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={saving}
+            className="clay-btn clay-btn-primary w-full"
+          >
             {saving ? "Menyimpan..." : "Simpan"}
           </button>
         </form>

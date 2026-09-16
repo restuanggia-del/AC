@@ -13,15 +13,15 @@ export default function Modal({ open, title, onClose, children, widthClass = "ma
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/50 p-4">
-      <div className={`max-h-[90vh] w-full ${widthClass} overflow-y-auto rounded-2xl bg-white shadow-xl`}>
-        <div className="flex items-center justify-between border-b border-ink-100 px-6 py-4">
-          <h3 className="text-base font-bold text-ink-900">{title}</h3>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-ink-400 hover:bg-ink-100 hover:text-ink-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/40 p-4 backdrop-blur-sm">
+      <div className={`clay max-h-[90vh] w-full ${widthClass} overflow-y-auto !rounded-[28px]`}>
+        <div className="flex items-center justify-between px-6 py-4">
+          <h3 className="text-base font-extrabold text-ink-900">{title}</h3>
+          <button onClick={onClose} className="clay-icon-btn clay-icon-btn-danger">
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="px-6 pb-6">{children}</div>
       </div>
     </div>
   );

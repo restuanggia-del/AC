@@ -13,25 +13,18 @@ export default function ConfirmDialog({ open, title, description, onConfirm, onC
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/50 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/40 p-4 backdrop-blur-sm">
+      <div className="clay w-full max-w-sm p-6 !rounded-[28px]">
+        <div className="clay-bubble h-12 w-12 bg-gradient-to-br from-rose-300 to-red-500 text-white">
           <AlertTriangle className="h-6 w-6" />
         </div>
-        <h3 className="mt-4 text-base font-bold text-ink-900">{title}</h3>
+        <h3 className="mt-4 text-base font-extrabold text-ink-900">{title}</h3>
         <p className="mt-1 text-sm text-ink-500">{description}</p>
         <div className="mt-6 flex justify-end gap-3">
-          <button
-            onClick={onCancel}
-            className="rounded-xl border border-ink-200 px-4 py-2 text-sm font-semibold text-ink-600 hover:bg-ink-50"
-          >
+          <button onClick={onCancel} className="clay-btn clay-btn-secondary">
             Batal
           </button>
-          <button
-            onClick={onConfirm}
-            disabled={isLoading}
-            className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
-          >
+          <button onClick={onConfirm} disabled={isLoading} className="clay-btn clay-btn-danger">
             {isLoading ? "Menghapus..." : "Ya, Hapus"}
           </button>
         </div>

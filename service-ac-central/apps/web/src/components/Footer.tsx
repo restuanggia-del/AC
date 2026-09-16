@@ -11,9 +11,6 @@ export default function Footer() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-14 text-center sm:px-6 lg:grid-cols-4 lg:px-8 lg:text-left">
         <div className="flex flex-col items-center lg:items-start">
           <div className="flex items-center gap-2">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-600 text-white">
-              <Snowflake className="h-5 w-5" />
-            </span>
             <p className="text-lg font-extrabold text-white">
               {settings.companyName}
             </p>
