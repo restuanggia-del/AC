@@ -34,12 +34,16 @@ export default function Sidebar() {
           <Snowflake className="h-5 w-5" />
         </span>
         <div className="leading-tight">
-          <p className="text-sm font-extrabold text-ink-900">Service AC Central</p>
+          <p className="text-sm font-extrabold text-ink-900">
+            Service AC Central
+          </p>
           <p className="text-xs text-ink-400">Admin Panel</p>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-2">
+      <div className="mx-5 h-px bg-ink-300/40" />
+
+      <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-3">
         {menu.map((item) => (
           <NavLink
             key={item.to}
@@ -61,7 +65,8 @@ export default function Sidebar() {
 
       <div className="p-4">
         <p className="clay-inset px-3.5 py-3 text-[11px] leading-relaxed text-ink-500">
-          Perubahan yang Anda simpan di sini akan langsung tampil di website publik.
+          Perubahan yang Anda simpan di sini akan langsung tampil di website
+          publik.
         </p>
       </div>
     </aside>

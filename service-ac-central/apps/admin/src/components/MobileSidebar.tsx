@@ -27,12 +27,21 @@ const menu = [
   { to: "/pengaturan", label: "Pengaturan", icon: Settings },
 ];
 
-export default function MobileSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function MobileSidebar({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
-      <div className="absolute inset-0 bg-ink-900/40 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-ink-900/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <aside className="clay relative m-3 flex h-[calc(100%-1.5rem)] w-72 flex-col !rounded-[28px]">
         <div className="flex items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2">
@@ -45,7 +54,10 @@ export default function MobileSidebar({ open, onClose }: { open: boolean; onClos
             <X className="h-5 w-5" />
           </button>
         </div>
-        <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-2">
+
+        <div className="mx-5 h-px bg-ink-300/40" />
+
+        <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-3">
           {menu.map((item) => (
             <NavLink
               key={item.to}
