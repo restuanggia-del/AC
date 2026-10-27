@@ -64,7 +64,7 @@ export default function Home() {
       fetchTestimonials(),
       fetchFaqs(),
     ]).then(([s, p, t, f]) => {
-      if (s.status === "fulfilled") setServices(s.value.slice(0, 8));
+      if (s.status === "fulfilled") setServices(s.value.slice(0, 4));
       if (p.status === "fulfilled") setPortfolio(p.value.slice(0, 6));
       if (t.status === "fulfilled") setTestimonials(t.value.slice(0, 3));
       if (f.status === "fulfilled") setFaqs(f.value.slice(0, 6));
