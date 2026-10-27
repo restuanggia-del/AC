@@ -1,8 +1,12 @@
+import { Link } from "react-router-dom";
 import type { Portfolio } from "../types";
 
 export default function PortfolioCard({ item }: { item: Portfolio }) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-ink-100 bg-ink-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink-900/10">
+    <Link
+      to={`/portfolio/${item._id}`}
+      className="group relative block overflow-hidden rounded-2xl border border-ink-100 bg-ink-50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink-900/10"
+    >
       <div className="aspect-[4/3] w-full overflow-hidden">
         <img
           src={item.imageUrl}
@@ -16,6 +20,6 @@ export default function PortfolioCard({ item }: { item: Portfolio }) {
         </p>
         <p className="text-sm font-bold text-white">{item.title}</p>
       </div>
-    </div>
+    </Link>
   );
 }
