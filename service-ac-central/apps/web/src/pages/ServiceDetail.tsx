@@ -22,7 +22,7 @@ import type { ApiResponse, Service } from "../types";
 import { buildTelLink, buildWhatsAppLink, formatRupiah } from "../utils";
 
 const categoryLabels: Record<Service["category"], string> = {
-  cuci: "Cuci AC",
+  cuci: "Maintenance",
   service: "Service AC",
   pasang: "Pasang AC",
   bongkar: "Bongkar AC",

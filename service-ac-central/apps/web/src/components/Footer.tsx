@@ -64,7 +64,7 @@ export default function Footer() {
             Layanan Kami
           </p>
           <ul className="mt-4 space-y-2 text-sm text-ink-400">
-            <li>Cuci AC</li>
+            <li>Maintenance AC</li>
             <li>Service & Perbaikan AC</li>
             <li>Pasang & Bongkar AC</li>
             <li>Isi & Tambah Freon</li>

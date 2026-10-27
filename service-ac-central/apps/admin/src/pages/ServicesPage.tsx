@@ -12,7 +12,7 @@ import { serviceApi, uploadImage } from "../services/resources";
 import type { Service } from "../types";
 
 const categoryOptions = [
-  { value: "cuci", label: "Cuci AC" },
+  { value: "cuci", label: "Maintenance" },
   { value: "service", label: "Service AC" },
   { value: "pasang", label: "Pasang AC" },
   { value: "bongkar", label: "Bongkar AC" },
