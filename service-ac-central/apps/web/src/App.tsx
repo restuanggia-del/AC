@@ -5,8 +5,10 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import LocationPage from "./pages/LocationPage";
 import NotFound from "./pages/NotFound";
+import PortfolioDetail from "./pages/PortfolioDetail";
 import PortfolioPage from "./pages/PortfolioPage";
 import Pricing from "./pages/Pricing";
+import ServiceDetail from "./pages/ServiceDetail";
 import Services from "./pages/Services";
 import Team from "./pages/Team";
 
@@ -18,8 +20,10 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="tentang" element={<About />} />
           <Route path="layanan" element={<Services />} />
+          <Route path="layanan/:id" element={<ServiceDetail />} />
           <Route path="harga" element={<Pricing />} />
           <Route path="portfolio" element={<PortfolioPage />} />
+          <Route path="portfolio/:id" element={<PortfolioDetail />} />
           <Route path="team" element={<Team />} />
           <Route path="lokasi" element={<LocationPage />} />
           <Route path="kontak" element={<Contact />} />
