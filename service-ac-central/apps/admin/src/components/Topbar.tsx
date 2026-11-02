@@ -2,6 +2,7 @@ import { Menu, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
+import NotificationBell from "./NotificationBell";
 import MobileSidebar from "./MobileSidebar";
 import UserMenu from "./UserMenu";
 
@@ -44,6 +45,7 @@ export default function Topbar() {
           )}
         </div>
 
+        <NotificationBell />
         <UserMenu />
       </header>
 

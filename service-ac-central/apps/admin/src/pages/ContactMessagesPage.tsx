@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import ConfirmDialog from "../components/ConfirmDialog";
 import PageHeader from "../components/PageHeader";
 import { useToast } from "../components/Toast";
+import { useNotifications } from "../hooks/useNotifications";
 import { matchesQuery, useSearch } from "../hooks/useSearch";
 import { contactApi } from "../services/resources";
 import type { ContactMessage } from "../types";
@@ -22,6 +23,7 @@ const statusColor: Record<ContactMessage["status"], string> = {
 
 export default function ContactMessagesPage() {
   const { showToast } = useToast();
+  const { refresh: refreshNotifications } = useNotifications();
   const { normalizedQuery } = useSearch();
   const [items, setItems] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,6 +36,7 @@ export default function ContactMessagesPage() {
     contactApi
       .getAll(filter || undefined)
       .then(setItems)
+      .then(() => refreshNotifications())
       .finally(() => setLoading(false));
   }
   useEffect(loadData, [filter]);

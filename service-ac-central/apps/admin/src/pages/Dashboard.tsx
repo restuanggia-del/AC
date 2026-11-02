@@ -14,7 +14,8 @@ import {
   Users,
   Wrench,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNotifications } from "../hooks/useNotifications";
 import BarChart from "../components/charts/BarChart";
 import DonutChart from "../components/charts/DonutChart";
 import MiniCalendar from "../components/MiniCalendar";
@@ -76,6 +77,20 @@ export default function Dashboard() {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [activeServices, setActiveServices] = useState(0);
+  const { newCount } = useNotifications();
+  const firstRun = useRef(true);
+
+  // perbarui kartu & grafik pesan saat ada pesan baru masuk
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    contactApi
+      .getAll()
+      .then(setMessages)
+      .catch(() => {});
+  }, [newCount]);
 
   useEffect(() => {
     Promise.allSettled([

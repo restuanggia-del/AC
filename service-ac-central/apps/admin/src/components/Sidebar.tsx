@@ -12,6 +12,7 @@ import {
   HelpCircle,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useNotifications } from "../hooks/useNotifications";
 
 const menu = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -27,6 +28,7 @@ const menu = [
 ];
 
 export default function Sidebar() {
+  const { newCount } = useNotifications();
   return (
     <aside className="clay-panel hidden w-64 shrink-0 flex-col lg:flex">
       <div className="flex items-center gap-3 px-5 py-5">
@@ -59,6 +61,11 @@ export default function Sidebar() {
           >
             <item.icon className="h-4.5 w-4.5" />
             {item.label}
+            {item.to === "/pesan" && newCount > 0 && (
+              <span className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                {newCount > 99 ? "99+" : newCount}
+              </span>
+            )}
           </NavLink>
         ))}
       </nav>
